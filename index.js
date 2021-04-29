@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const convert = require('./lib/convert')
+const apiBCB = require('./lib/api.bcb')
 
 const app = express()
 
@@ -8,8 +9,9 @@ app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/', (re, res) => {
-  res.render('home')
+app.get('/', async (re, res) => {
+  const cotacao = await apiBCB.getCotacao()
+  res.render('home', { cotacao })
 })
 
 app.get('/cotacao', (req, res) => {
@@ -31,7 +33,7 @@ app.get('/cotacao', (req, res) => {
   }
 })
 
-app.listen(3001, err => {
+app.listen(3000, err => {
   if (err) {
     console.log('Erro ao ocnectar servidor')
   } else {
